@@ -1,0 +1,28 @@
+# Python virtual environments
+.venv/
+.loan/
+__pycache__/
+*.pyc
+
+# Secrets
+.env
+.env.local
+*.key
+credentials.json
+
+# Audio/video (large binaries — kept in Excel or Drive, not git)
+*.wav
+*.mp3
+*.m4a
+recordings/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Excel (submitted separately, not in repo)
+*.xlsx
