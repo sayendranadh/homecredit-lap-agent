@@ -1,55 +1,63 @@
 # Home Credit LAP Voice Agent
 
-An AI voice agent that qualifies existing Home Credit customers for
-a pre-approved Loan Against Property (LAP) offer. Built as a
-single-prompt agent on **Retell AI**.
+An AI voice agent that qualifies existing Home Credit customers for a pre-approved Loan Against Property (LAP) offer. Built as a single-prompt agent on Retell AI.
 
-**Submitted by:** [Your name]
-**Date:** [Submission date]
+**Submitted by:** Sayendranadh
 **Platform:** Retell AI (Single-Prompt Agent)
-**Model:** GPT-5.6 Terra
 **Languages tested:** English (US) + Hindi
+
+---
+
+## Live Agent
+
+Published Retell agent — test with a web call:
+
+**[Open the agent](https://agent.retellai.com/orb/agent_f302dab1f1c31c6d0ee1482f42?token=bbdb647c854fa7d098c10dd9ebf6fc28)**
+
+Or paste this URL in your browser:
+
+https://agent.retellai.com/orb/agent_f302dab1f1c31c6d0ee1482f42?token=bbdb647c854fa7d098c10dd9ebf6fc28
+
+---
+
+## Call Flow
+
+The agent moves through the following stages on every call. Only one terminal outcome fires per call.
+
+| Step | Stage | Branches |
+|---|---|---|
+| 1 | Greeting and verification | Customer refuses → **DECLINED** |
+| 2 | Busy check | Customer busy → **DEFERRED** (capture callback) |
+| 3 | Present LAP offer | — |
+| 4 | Transfer check | Existing loan or EMI reduction → **TRANSFERRED** |
+| 5 | Eligibility checklist (Q1–Q7) | Hard rule fails → **DISQUALIFIED** |
+| 6 | Loan amount check | Over ₹75L → counter-offer → accept (continue) or reject → **DECLINED** |
+| 7 | Handoff gate | All 7 items pass → **QUALIFIED_HANDOFF** |
+
+### Terminal Outcomes
+
+| Outcome | Trigger | Message |
+|---|---|---|
+| QUALIFIED_HANDOFF | All 7 items filled, no disqualify, no transfer | Senior loan expert will call |
+| DISQUALIFIED | Hard rule failed | Doesn't meet criteria for this offer |
+| TRANSFERRED | Existing loan or EMI reduction | Loan-transfer specialist will call |
+| DEFERRED | Customer busy | Callback scheduled |
+| DECLINED | Refused, rejected counter-offer, wrong number | Polite close |
 
 ---
 
 ## What the Agent Does
 
-1. **Verifies** the intended customer.
-2. **Handles busy deferrals** — captures callback time and ends.
-3. **Presents the LAP offer** as a loyalty reward (up to ₹75 lakh).
-4. **Detects existing loan / EMI-reduction cases** and routes to a
-   loan-transfer specialist via a separate branch.
-5. **Captures 7 eligibility data points** in any order, remembering
-   facts provided out of sequence and never re-asking.
-6. **Applies eligibility rules**:
-   - Hard disqualifiers: agricultural property, no original
-     documents, cash income, tenure outside 3–15 years.
-   - Soft fail: loan amount > ₹75L → counter-offer the cap.
-   - Never-fails: ownership (sole or joint), market value.
-7. **Hands off qualified leads** to a senior loan expert only after
-   all 7 items are answered and validated.
-
----
-
-## Live Agent
-
-**Published Retell agent (test with a web call):**
-
-https://agent.retellai.com/orb/agent_f302dab1f1c31c6d0ee1482f42?token=bbdb647c854fa7d098c10dd9ebf6fc28
-
-Open this link in a browser to interact with the agent directly.
-No installation required.
-
----
-
-## Live Agent
-
-**Published Retell agent (test with a web call):**
-
-https://agent.retellai.com/orb/agent_f302dab1f1c31c6d0ee1482f42?token=bbdb647c854fa7d098c10dd9ebf6fc28
-
-Open this link in a browser to interact with the agent directly.
-No installation required.
+1. Verifies the intended customer.
+2. Handles busy deferrals — captures callback time and ends.
+3. Presents the LAP offer as a loyalty reward (up to ₹75 lakh).
+4. Detects existing loan / EMI-reduction cases and routes to a loan-transfer specialist.
+5. Captures 7 eligibility data points in any order, without re-asking.
+6. Applies eligibility rules:
+   - **Hard disqualifiers:** agricultural property, no original documents, cash income, tenure outside 3–15 years
+   - **Soft fail:** loan amount over ₹75L → counter-offer the cap
+   - **Never fails:** ownership (sole or joint), market value
+7. Hands off qualified leads to a senior loan expert.
 
 ---
 
@@ -57,24 +65,27 @@ No installation required.
 
 | Path | Description |
 |---|---|
-| `system-prompt.md` | The complete system prompt (Deliverable 1) |
-| `tests/test-matrix.md` | 28 test scenarios with expected outcomes |
-| `approach.md` | Design rationale and build process |
-| `docs/rules-spec.md` | Eligibility rule taxonomy |
-| `docs/state-model.md` | State block definition |
-| `docs/decision-tree.md` | Canonical call flow |
+| system-prompt.md | Complete system prompt |
+| tests/test-matrix.md | 28 test scenarios |
+| approach.md | Design rationale and build process |
+| docs/rules-spec.md | Eligibility rule taxonomy |
+| docs/state-model.md | State block definition |
+| docs/decision-tree.md | Canonical call flow |
+| transcripts_urls.csv | Test evidence — call links, transcripts, recordings |
 
 ---
 
-## External Evidence (not in repo)
+## Test Evidence
 
-| Resource | Location |
+transcripts_urls.csv contains one row per test call with three columns:
+
+| Column | Content |
 |---|---|
-| Test call recordings + transcripts | `transcripts_urls.csv` (submitted separately) |
-| Excel workbook with audio + transcripts | Submitted separately |
+| Public Log URL | Shareable Retell call log link |
+| Transcript | Full call transcript (English and Hindi) |
+| Recording URL | Direct audio recording URL |
 
-The `.gitignore` excludes `*.wav`, `*.mp3`, and `*.xlsx` — audio and
-Excel files are hosted outside the repo to keep it lightweight.
+28 rows — one per test scenario (24 English + 4 Hindi).
 
 ---
 
@@ -88,109 +99,31 @@ Excel files are hosted outside the repo to keep it lightweight.
 | Hindi (language + gender) | 4 | 4 |
 | **Total** | **28** | **28** |
 
-Six prompt bugs were identified during testing and fixed. The prompt
-went through 6 revisions. All scenarios pass on the final version.
-
-See `tests/test-matrix.md` for full scenario definitions and
-`approach.md` for the testing narrative.
-
----
-
-## Build Process
-
-
-
-
-
----
-
-## External Evidence (not in repo)
-
-| Resource | Location |
-|---|---|
-| Test call recordings + transcripts | `transcripts_urls.csv` (submitted separately) |
-| Excel workbook with audio + transcripts | Submitted separately |
-
-The `.gitignore` excludes `*.wav`, `*.mp3`, and `*.xlsx` — audio and
-Excel files are hosted outside the repo to keep it lightweight.
-
----
-
-## Testing Summary
-
-| Batch | Scenarios | Passed |
-|---|---|---|
-| Baseline (English) | 12 | 12 |
-| Adversarial (English) | 4 | 4 |
-| Extended Edge Cases (English) | 8 | 8 |
-| Hindi (language + gender) | 4 | 4 |
-| **Total** | **28** | **28** |
-
-Six prompt bugs were identified during testing and fixed. The prompt
-went through 6 revisions. All scenarios pass on the final version.
-
-See `tests/test-matrix.md` for full scenario definitions and
-`approach.md` for the testing narrative.
-
----
-
-## Build Process
-
-```mermaid
-flowchart TD
-    R[Requirements] --> ER[Eligibility Rules]
-    ER --> SV[State Variables]
-    SV --> DT[Decision Tree]
-    DT --> CR[Conversation Rules]
-    CR --> EC[Edge Cases]
-    EC --> SP[System Prompt]
-    SP --> TM[Testing Matrix]
-    TM --> FB{Six prompt fixes}
-    FB -->|feedback loop| SP
-    TM --> PASS[28/28 tests passing]
-    FB --> PASS
-
-    style R fill:#e1f5ff,stroke:#0288d1
-    style SP fill:#fff3e0,stroke:#f57c00
-    style TM fill:#f3e5f5,stroke:#7b1fa2
-    style PASS fill:#c8e6c9,stroke:#388e3c
-```text
+Six prompt bugs were found and fixed during testing. See approach.md for the full list.
 
 ---
 
 ## Key Design Decisions
 
-1. **State machine, not a script.** 14 variables (8 eligibility
-   slots + 3 gate flags + 3 terminal flags) maintained silently
-   across the call.
+1. **State machine, not a script.** 14 variables (8 eligibility slots, 3 gate flags, 3 terminal flags) maintained silently across the call.
 
-2. **Four-beat per-turn loop.** Extract first. Validate second.
-   Update state third. Ask next fourth.
+2. **Four-beat per-turn loop.** Extract first. Validate second. Update state third. Ask next fourth.
 
-3. **Rule taxonomy.** Four hard disqualifiers, one soft
-   counter-offer, two never-fail, two transfer triggers. Different
-   failure behaviors per rule type.
+3. **Rule taxonomy.** Four hard disqualifiers, one soft counter-offer, two never-fail, two transfer triggers.
 
-4. **Two distinct transfer branches.** Loan-transfer specialist
-   (existing loans / EMI reduction) vs. senior loan expert
-   (qualified fresh-loan leads). The prompt guards against routing
-   a qualified lead to the wrong desk.
+4. **Two distinct transfer branches.** Loan-transfer specialist (existing loans / EMI reduction) vs. senior loan expert (qualified fresh-loan leads).
 
-5. **RAG-only factual sourcing.** No invented rates, thresholds, or
-   branch locations.
+5. **RAG-only factual sourcing.** No invented rates, thresholds, or branch locations.
 
-6. **ASR tolerance.** Handles garbled speech ("one point two floor"
-   → ₹1.2 crore) by extracting from context.
+6. **ASR tolerance.** Handles garbled speech by extracting from context.
 
 ---
 
 ## How to Deploy
 
 1. Create a Single-Prompt Agent on Retell AI.
-2. Paste `system-prompt.md` into the agent's prompt field.
-3. Set dynamic variables: `agent_name`, `company_name`,
-   `customer_name`, `agent_gender`, `current_date`, `current_day`,
-   `current_time`, `language_to_speak`.
-4. Add an `end_call` tool.
-5. Configure post-call extraction fields (see `docs/state-model.md`).
-6. Attach the knowledge base for `additional_context_from_rag`.
+2. Paste system-prompt.md into the agent's prompt field.
+3. Set dynamic variables: agent_name, company_name, customer_name, agent_gender, current_date, current_day, current_time, language_to_speak.
+4. Add an end_call tool.
+5. Configure post-call extraction fields (see docs/state-model.md).
+6. Attach the knowledge base for additional_context_from_rag.
