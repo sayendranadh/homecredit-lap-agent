@@ -7,36 +7,35 @@ branch and terminal outcome documented.
 
 ## 1. Top-Level Flow
 
-START
-│
-├─ Agent greeting: "Hello, may I speak with {{customer_name}}?"
-│
-├─ Customer responds?
-│ ├─ No / wrong number → DECLINED (courteous close)
-│ ├─ Asks "who is calling?" → explain identity, re-attempt
-│ └─ Confirms → customer_verified = TRUE
-│
-├─ Agent introduction: "This is {{agent_name}} from {{company_name}}."
-│
-├─ Agent: "Is now a good time to talk?"
-│ ├─ No → BUSY DEFERRAL
-│ └─ Yes → continue
-│
-├─ OFFER PRESENTATION
-│
-├─ TRANSFER CHECK (mandatory, before Q1)
-│ "Do you already have a loan on the property, or are you
-│ looking to reduce an existing EMI?"
-│ ├─ Yes, existing loan → TRANSFERRED
-│ ├─ Yes, EMI reduction → TRANSFERRED
-│ └─ No → continue
-│
-└─ ELIGIBILITY CHECKLIST (Q1 → Q7)
-│
-└─ Any DQ fires mid-flow → DISQUALIFIED
-└─ All 7 items complete + no DQ → QUALIFIED_HANDOFF
+```mermaid
+flowchart TD
+    START([START]) --> G["Greeting:<br/>Hello, may I speak with customer_name?"]
+    G --> V{Customer verified?}
+    V -->|"No / wrong number"| DECLINED[DECLINED]
+    V -->|"Who is calling?"| EXPLAIN["Explain identity<br/>Re-attempt verification"]
+    EXPLAIN --> V
+    V -->|"Yes, this is me"| INTRO["Introduction:<br/>This is agent_name from company_name"]
+    INTRO --> BUSYQ{Is now a good time?}
+    BUSYQ -->|No| DEFERRED[DEFERRED]
+    BUSYQ -->|Yes| OFFER[Offer Presentation]
+    OFFER --> TRANSFER{Existing loan<br/>or EMI reduction?}
+    TRANSFER -->|"Yes, existing loan"| TRANSFERRED[TRANSFERRED]
+    TRANSFER -->|"Yes, EMI reduction"| TRANSFERRED
+    TRANSFER -->|No| Q1["Q1: Property Type"]
+    Q1 --> CHK{Hard DQ fired?}
+    CHK -->|Yes| DISQ[DISQUALIFIED]
+    CHK -->|No| QNEXT{More questions?}
+    QNEXT -->|Yes| QNEXT2["Ask earliest UNKNOWN item"]
+    QNEXT2 --> CHK
+    QNEXT -->|"All 7 filled"| HANDOFF[QUALIFIED_HANDOFF]
 
----
+    style START fill:#e1f5ff,stroke:#0288d1
+    style HANDOFF fill:#c8e6c9,stroke:#388e3c
+    style DISQ fill:#ffcdd2,stroke:#c62828
+    style TRANSFERRED fill:#ffe0b2,stroke:#ef6c00
+    style DEFERRED fill:#fff9c4,stroke:#f9a825
+    style DECLINED fill:#e0e0e0,stroke:#616161
+```---
 
 ## 2. Verification Branch (Section 6)
 

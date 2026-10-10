@@ -31,6 +31,28 @@ single-prompt agent on **Retell AI**.
 
 ---
 
+## Live Agent
+
+**Published Retell agent (test with a web call):**
+
+https://agent.retellai.com/orb/agent_f302dab1f1c31c6d0ee1482f42?token=bbdb647c854fa7d098c10dd9ebf6fc28
+
+Open this link in a browser to interact with the agent directly.
+No installation required.
+
+---
+
+## Live Agent
+
+**Published Retell agent (test with a web call):**
+
+https://agent.retellai.com/orb/agent_f302dab1f1c31c6d0ee1482f42?token=bbdb647c854fa7d098c10dd9ebf6fc28
+
+Open this link in a browser to interact with the agent directly.
+No installation required.
+
+---
+
 ## Repository Contents
 
 | Path | Description |
@@ -113,27 +135,26 @@ See `tests/test-matrix.md` for full scenario definitions and
 ---
 
 ## Build Process
-Requirements
-↓
-Eligibility Rules
-↓
-State Variables
-↓
-Decision Tree
-↓
-Conversation Rules
-↓
-Edge Cases
-↓
-System Prompt
-↓
-Testing Matrix
-↓
-6 prompt fixes (feedback loop)
-↓
-28/28 passing
 
-text
+```mermaid
+flowchart TD
+    R[Requirements] --> ER[Eligibility Rules]
+    ER --> SV[State Variables]
+    SV --> DT[Decision Tree]
+    DT --> CR[Conversation Rules]
+    CR --> EC[Edge Cases]
+    EC --> SP[System Prompt]
+    SP --> TM[Testing Matrix]
+    TM --> FB{Six prompt fixes}
+    FB -->|feedback loop| SP
+    TM --> PASS[28/28 tests passing]
+    FB --> PASS
+
+    style R fill:#e1f5ff,stroke:#0288d1
+    style SP fill:#fff3e0,stroke:#f57c00
+    style TM fill:#f3e5f5,stroke:#7b1fa2
+    style PASS fill:#c8e6c9,stroke:#388e3c
+```text
 
 ---
 
